@@ -11,16 +11,28 @@ const RegisterForm = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors, isValid },
+    setError,
+    formState: { errors, isValid, isSubmitting },
   } = useForm<RegisterSchema>({
     resolver: zodResolver(registerSchema),
     mode: "onTouched",
   });
 
   const onSubmit = async (data: RegisterSchema) => {
-    const results = await registerUser(data);
+    const result = await registerUser(data);
 
-    console.log("AAA", results);
+    if (result.status === "success") {
+      console.log("User registered successfully");
+    } else {
+      if (Array.isArray(result.error)) {
+        result.error.forEach((err) => {
+          const fieldName = err.path.join(".") as keyof RegisterSchema;
+          setError(fieldName, { message: err.message });
+        });
+      } else {
+        setError("root.serverError", { message: result.error });
+      }
+    }
   };
 
   return (
@@ -40,7 +52,10 @@ const RegisterForm = () => {
             <Input label="Name" variant="bordered" defaultValue="" {...register("name")} isInvalid={!!errors.name} errorMessage={errors.name?.message} />
             <Input label="Email" variant="bordered" defaultValue="" {...register("email")} isInvalid={!!errors.email} errorMessage={errors.email?.message} />
             <Input label="Password" type="password" variant="bordered" defaultValue="" {...register("password")} isInvalid={!!errors.password} errorMessage={errors.password?.message} />
-            <Button isDisabled={!isValid} fullWidth color="secondary" type="submit">
+
+            {errors.root?.serverError && <p className="text-danger text-sm">{errors.root.serverError.message}</p>}
+
+            <Button isLoading={isSubmitting} isDisabled={!isValid} fullWidth color="secondary" type="submit">
               Register
             </Button>
           </div>
