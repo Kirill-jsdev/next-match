@@ -25,10 +25,9 @@ const LoginForm = () => {
   const onSubmit = async (data: LoginSchema) => {
     const result = await signInUser(data);
 
-    console.log("CCCCCCCCCCCCC", result);
-
     if (result.status === "success") {
       router.push("/members");
+      router.refresh();
     } else {
       toast.error(result.error as string);
     }

@@ -1,10 +1,14 @@
-import { Button, Navbar, NavbarBrand, NavbarContent, NavbarItem } from "@nextui-org/react";
+import { Button, Navbar, NavbarBrand, NavbarContent } from "@nextui-org/react";
 import Link from "next/link";
 import React from "react";
 import { GiMatchTip } from "react-icons/gi";
 import NavLink from "./NavLink";
+import { auth } from "@/auth";
+import UserMenu from "./UserMenu";
 
-const TopNav = () => {
+const TopNav = async () => {
+  const session = await auth();
+
   return (
     <Navbar
       maxWidth="xl"
@@ -27,12 +31,18 @@ const TopNav = () => {
       </NavbarContent>
 
       <NavbarContent justify="end">
-        <Button variant="bordered" className="text-white" as={Link} href="/auth/login">
-          Login
-        </Button>
-        <Button variant="bordered" className="text-white" as={Link} href="/auth/register">
-          Register
-        </Button>
+        {session?.user ? (
+          <UserMenu user={session.user} />
+        ) : (
+          <>
+            <Button variant="bordered" className="text-white" as={Link} href="/auth/login">
+              Login
+            </Button>
+            <Button variant="bordered" className="text-white" as={Link} href="/auth/register">
+              Register
+            </Button>
+          </>
+        )}
       </NavbarContent>
     </Navbar>
   );

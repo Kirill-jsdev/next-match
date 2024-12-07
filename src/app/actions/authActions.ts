@@ -6,7 +6,7 @@ import bcrypt from "bcryptjs";
 import { User } from "@prisma/client";
 import { ActionResult } from "@/types";
 import { LoginSchema } from "../lib/schemas/loginSchema";
-import { signIn } from "@/auth";
+import { signIn, signOut } from "@/auth";
 import { AuthError } from "next-auth";
 
 export async function signInUser(data: LoginSchema): Promise<ActionResult<string>> {
@@ -16,8 +16,6 @@ export async function signInUser(data: LoginSchema): Promise<ActionResult<string
       password: data.password,
       redirect: false,
     });
-
-    console.log("RRR", result);
 
     return { status: "success", data: "Logged in" };
   } catch (error) {
@@ -33,6 +31,10 @@ export async function signInUser(data: LoginSchema): Promise<ActionResult<string
       return { status: "error", error: "Something went wrong" };
     }
   }
+}
+
+export async function signOutUser() {
+  await signOut({ redirectTo: "/" });
 }
 
 export async function registerUser(data: RegisterSchema): Promise<ActionResult<User>> {
