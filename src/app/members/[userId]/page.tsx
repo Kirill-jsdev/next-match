@@ -10,7 +10,7 @@ const MemberDetailsPage = async ({ params }: { params: { userId: string } }) => 
   const member = await getMemberByUserId(params.userId);
 
   if (!member) {
-    return notFound;
+    return notFound();
   }
 
   return <div>{member?.country}</div>;

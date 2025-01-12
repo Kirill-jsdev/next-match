@@ -1,3 +1,4 @@
+"use client";
 import { calculateAge } from "@/utils/util";
 import { Button, Card, CardBody, CardFooter, Divider, Image } from "@nextui-org/react";
 import { Member } from "@prisma/client";
