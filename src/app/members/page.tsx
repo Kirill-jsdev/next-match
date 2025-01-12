@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { getMembers } from "../actions/memberActions";
-import MemberCard from "./memberCard";
+import MemberCard from "./MemberCard";
 
 const MembersPage = async () => {
   const members = await getMembers();
